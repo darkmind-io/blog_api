@@ -1,0 +1,16 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+# [START handlers]
+handlers:
+- url: /static
+  static_dir: static
+- url: /.*
+  script: main.app
+# [END handlers]  
+
+# The following values are to be replaced by information from the output of
+  # 'gcloud service-management deploy swagger.json' command.
+#  ENDPOINTS_SERVICE_NAME: secure-bonus-175013.appspot.com
+#  ENDPOINTS_SERVICE_VERSION: 2017-07-27r0
