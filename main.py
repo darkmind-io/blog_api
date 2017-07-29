@@ -3,53 +3,51 @@ from flask import Flask, jsonify, abort, make_response, request
 
 app = Flask(__name__)
 
-tasks = [
+posts = [
     {
         'id': 1,
-        'title': u'Buy groceries',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol', 
-        'done': False
+        'title': u'Getting Google AppEngine',
+        'description': u'You have to use this',
     },
     {
         'id': 2,
-        'title': u'Learn Python',
-        'description': u'Need to find a good Python tutorial on the web', 
-        'done': False
+        'title': u'CSIS 604',
+        'description': u'This is the best class ever',
     }
 ]
 
-@app.route('/todo/api/v1.0/tasks', methods=['GET'])
-def get_tasks():
-    return jsonify({'tasks': tasks})
+@app.route('/blog/api/posts', methods=['GET'])
+def get_posts():
+    return jsonify({'posts': posts})
 
-@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
-def get_task(task_id):
-    task = [task for task in tasks if task['id'] == task_id]
-    if len(task) == 0:
+@app.route('/blog/api/posts/<int:post_id>', methods=['GET'])
+def get_post(post_id):
+    post = [post for post in posts if post['id'] == post_id]
+    if len(post) == 0:
         abort(404)
-    return jsonify({'task': task[0]})
+    return jsonify({'post': post[0]})
 
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
-@app.route('/todo/api/v1.0/tasks', methods=['POST'])
-def create_task():
+@app.route('/blog/api/posts', methods=['POST'])
+def create_post():
     if not request.json or not 'title' in request.json:
         abort(400)
-    task = {
-        'id': tasks[-1]['id'] + 1,
+    post = {
+        'id': posts[-1]['id'] + 1,
         'title': request.json['title'],
         'description': request.json.get('description', ""),
         'done': False
     }
-    tasks.append(task)
-    return jsonify({'task': task}), 201
+    posts.append(post)
+    return jsonify({'post': post}), 201
 
-@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['PUT'])
-def update_task(task_id):
-    task = [task for task in tasks if task['id'] == task_id]
-    if len(task) == 0:
+@app.route('/blog/api/posts/<int:post_id>', methods=['PUT'])
+def update_post(post_id):
+    post = [post for post in posts if post['id'] == post_id]
+    if len(post) == 0:
         abort(404)
     if not request.json:
         abort(400)
@@ -57,19 +55,17 @@ def update_task(task_id):
         abort(400)
     if 'description' in request.json and type(request.json['description']) is not unicode:
         abort(400)
-    if 'done' in request.json and type(request.json['done']) is not bool:
-        abort(400)
-    task[0]['title'] = request.json.get('title', task[0]['title'])
-    task[0]['description'] = request.json.get('description', task[0]['description'])
-    task[0]['done'] = request.json.get('done', task[0]['done'])
-    return jsonify({'task': task[0]})
+    post[0]['title'] = request.json.get('title', post[0]['title'])
+    post[0]['description'] = request.json.get('description', post[0]['description'])
+    post[0]['done'] = request.json.get('done', post[0]['done'])
+    return jsonify({'post': post[0]})
 
-@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['DELETE'])
-def delete_task(task_id):
-    task = [task for task in tasks if task['id'] == task_id]
-    if len(task) == 0:
+@app.route('/blog/api/posts/<int:post_id>', methods=['DELETE'])
+def delete_post(post_id):
+    post = [post for post in posts if post['id'] == post_id]
+    if len(post) == 0:
         abort(404)
-    tasks.remove(task[0])
+    posts.remove(post[0])
     return jsonify({'result': True})
 
 if __name__ == '__main__':
