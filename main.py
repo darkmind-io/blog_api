@@ -1,6 +1,11 @@
 #!flask/bin/python
 from flask import Flask, jsonify, abort, make_response, request
 
+from google.cloud import datastore
+
+def create_client(project_id):
+    return datastore.Client(project_id)
+
 app = Flask(__name__)
 
 posts = [
@@ -35,14 +40,21 @@ def not_found(error):
 def create_post():
     if not request.json or not 'title' in request.json:
         abort(400)
-    post = {
-        'id': posts[-1]['id'] + 1,
-        'title': request.json['title'],
-        'description': request.json.get('description', ""),
-        'done': False
-    }
-    posts.append(post)
-    return jsonify({'post': post}), 201
+    key = client.key('Task')
+
+    task = datastore.Entity(
+        key, exclude_from_indexes=['description'])
+
+    post.update({
+        'created': datetime.datetime.utcnow(),
+        'id': request.json['key'],
+        'title' : request.json['title'],
+        'description' : request.json.get('description', "")
+    })
+
+    client.put(task)
+
+    return jsonify({'post': task.key}), 201
 
 @app.route('/blog/api/posts/<int:post_id>', methods=['PUT'])
 def update_post(post_id):
@@ -57,7 +69,6 @@ def update_post(post_id):
         abort(400)
     post[0]['title'] = request.json.get('title', post[0]['title'])
     post[0]['description'] = request.json.get('description', post[0]['description'])
-    post[0]['done'] = request.json.get('done', post[0]['done'])
     return jsonify({'post': post[0]})
 
 @app.route('/blog/api/posts/<int:post_id>', methods=['DELETE'])
@@ -69,4 +80,5 @@ def delete_post(post_id):
     return jsonify({'result': True})
 
 if __name__ == '__main__':
+    client = create_client(secure-bonus-175013)
     app.run(debug=True)

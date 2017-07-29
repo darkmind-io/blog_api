@@ -1,11 +1,27 @@
 # blog_api
 
-This is a test
+This is an assignment for CSIS 604. The objective is to provide a RESTful api for a blog. The blog api must include a way to add a new blog entry, delete an entry, edit an entry, and retrieve and entry.
 
-List Blog Posts
+## Retrieve Blog Posts
+<pre>
 
-New Blog Post
+</pre>
 
-Delete Blog Post
+## Add Blog Post
+<pre>
 
-Edit Blog Post
+</pre>
+
+## Delete Blog Post
+<pre>
+
+</pre>
+
+## Edit Blog Post
+<pre>
+
+</pre>
+
+## Sources and inspiration:
+https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
+https://cloud.google.com/python/getting-started/using-cloud-datastore
